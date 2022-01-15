@@ -81,8 +81,6 @@ class Modeling {
                       if (processors[i].nodes.length > 1 ) { //Якщо наступна вершина ще не отримала вхідні дані
                           processors[i].waitForOtherNode = processors[i].neededNode.includes(processors[i].nodes[1])
                           if (processors[i].waitForOtherNode) {
-                              let withoutFirstArray = JSON.parse(JSON.stringify((processors[i].nodes)))
-                              withoutFirstArray.shift()
                               for (let h=2;h< processors[i].nodes.length;h++) { //Шукаємо вершину ,яка може виконуватися
                                   let notGood = 1
                                   let jumpRevers = reversMatrMod[processors[i].nodes[h]].filter(a => a > 0)
