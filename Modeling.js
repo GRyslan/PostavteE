@@ -81,22 +81,31 @@ class Modeling {
                       if (processors[i].nodes.length > 1 ) { //Якщо наступна вершина ще не отримала вхідні дані
                           processors[i].waitForOtherNode = processors[i].neededNode.includes(processors[i].nodes[1])
                           if (processors[i].waitForOtherNode) {
+                              let withoutFirstArray = JSON.parse(JSON.stringify((processors[i].nodes)))
+                              withoutFirstArray.shift()
                               for (let h=2;h< processors[i].nodes.length;h++) { //Шукаємо вершину ,яка може виконуватися
                                   let notGood = 1
                                   let jumpRevers = reversMatrMod[processors[i].nodes[h]].filter(a => a > 0)
                                   let nextNode = 0
                                   for (let k = 0; k < jumpRevers.length; k++) {
-                                      nextNode = reversMatrMod[processors[i].nodes[h]].indexOf(jump[k], nextNode + 1)
-                                      if (processors[i].nodes.includes(nextNode)) {
+                                      nextNode = reversMatrMod[processors[i].nodes[h]].indexOf(jumpRevers[k], nextNode + 1)
+                                      if (processors[i].nodes[1] === (nextNode)) {
                                           notGood = 0
                                           break
                                       }
                                   }
+                                  if(notGood===0){
+                                      continue
+
+                                  }
                                   if (!processors[i].neededNode.includes(processors[i].nodes[h] && notGood === 1)) {
-                                      let forSwap1 = processors[i].nodes[h] //заміняємо вершини ,якщо знайдено вершину ,яка може виконуватися
-                                      let forSwap2 = processors[i].nodes[1]
-                                      processors[i].nodes[1] = forSwap1
-                                      processors[i].nodes[h] = forSwap2
+                                      let swapMatr = JSON.parse(JSON.stringify([processors[i].nodes[0],processors[i].nodes[h],processors[i].nodes[1]]))
+                                      for(let b = 2;b<processors[i].nodes.length;b++){ //заміняємо вершини ,якщо знайдено вершину ,яка може виконуватися
+                                          if (processors[i].nodes[h] !== processors[i].nodes[b]){
+                                              swapMatr.push(processors[i].nodes[b])
+                                          }
+                                      }
+                                      processors[i].nodes = JSON.parse(JSON.stringify(swapMatr))
                                       processors[i].waitForOtherNode = false
                                       break
                                   }
